@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f4ed">
+  <title>Lazzat Cafe | Billing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Lazzat Cafe home">
+        <span class="brand-copy"><strong id="shop-name-display">Lazzat Cafe</strong><small>CAFE</small></span>
+      </a>
+      <button class="nav-link active" id="billing-nav" type="button" aria-current="page" data-page="billing"><span class="nav-icon">▦</span> New bill <span class="nav-arrow">›</span></button>
+      <button class="nav-link" id="kitchen-nav" type="button" data-page="kitchen"><span class="nav-icon">♨</span> Kitchen</button>
+      <button class="nav-link" id="customers-nav" type="button" data-page="customers"><span class="nav-icon">♙</span> Customers</button>
+      <button class="nav-link" id="reports-nav" type="button" data-page="reports"><span class="nav-icon">▤</span> Reports</button>
+      <button class="nav-link" id="settings-nav" type="button" data-page="settings"><span class="nav-icon">⚙</span> Shop settings</button>
+      <button class="nav-link" id="history-nav" type="button"><span class="nav-icon">◷</span> Bill history</button>
+      <div class="sidebar-bottom">
+        <div class="today-card">
+          <div class="today-icon">☀</div>
+          <div><small>Today's sales</small><strong id="today-sales">₹0.00</strong></div>
+        </div>
+        <div class="offline-status"><span></span> All changes saved on this device</div>
+        <div class="developer-credit">Developed by <strong>Shariff Tech</strong></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb">Lazzat Cafe <span>/</span> <strong id="breadcrumb-current">New bill</strong></div>
+        <div class="topbar-right">
+          <div class="date-display"><span class="date-dot"></span><span id="today-date"></span></div>
+          <button class="avatar" type="button" title="Cafe staff">C</button>
+        </div>
+      </header>
+
+      <div class="page-content" id="billing-page">
+        <section class="menu-section">
+          <div class="welcome-row">
+            <div>
+              <p class="eyebrow">POINT OF SALE</p>
+              <h1>New bill</h1>
+              <p class="welcome-subtitle">Select menu items to build this order.</p>
+            </div>
+          </div>
+
+          <div class="menu-toolbar">
+            <div class="section-heading"><div><h2>Our menu</h2><p id="menu-count">0 delicious things</p></div></div>
+            <button class="button button-outline add-menu-button" id="open-menu-modal" type="button"><span>＋</span> Add menu item</button>
+          </div>
+          <div class="menu-controls">
+            <div class="category-list" id="category-list" aria-label="Menu categories"></div>
+            <label class="search-box"><span aria-hidden="true">⌕</span><input id="menu-search" type="search" placeholder="Search menu..." autocomplete="off" aria-label="Search menu"><kbd>/</kbd></label>
+          </div>
+          <div class="product-grid" id="product-grid" aria-live="polite"></div>
+        </section>
+
+        <aside class="order-panel" aria-label="Current bill">
+          <div class="order-header">
+            <div><p class="eyebrow">ORDER SUMMARY</p><h2>Your bill</h2></div>
+            <button class="button button-outline clear-button" id="clear-cart" type="button" title="Remove all items from this bill">Clear bill</button>
+          </div>
+          <div class="order-meta">
+            <label class="field-label" for="customer-name">Customer name <span class="optional">(optional)</span></label>
+            <input id="customer-name" class="text-field" type="text" list="customer-options" placeholder="Add a name" autocomplete="off">
+            <label class="field-label whatsapp-field-label" for="customer-whatsapp">WhatsApp number <span class="optional">(optional)</span></label>
+            <input id="customer-whatsapp" class="text-field" type="tel" maxlength="20" placeholder="10-digit number or +91..." autocomplete="tel">
+            <div class="order-type-wrap">
+              <span class="field-label">Order type</span>
+              <div class="order-type-picker" role="group" aria-label="Order type">
+                <button class="type-button selected" type="button" data-type="Dine in">Dine in</button>
+                <button class="type-button" type="button" data-type="Takeaway">Takeaway</button>
+              </div>
+            </div>
+          </div>
+          <div class="cart-heading"><span>ITEM</span><span>QTY</span><span class="align-right">AMOUNT</span></div>
+          <div class="cart-items" id="cart-items"></div>
+          <div class="empty-cart" id="empty-cart">
+            <div class="empty-cart-icon">♧</div>
+            <strong>Your bill is empty</strong>
+            <span>Choose an item from the menu to get started.</span>
+          </div>
+          <div class="bill-summary">
+            <div class="summary-row"><span>Subtotal</span><strong id="subtotal">₹0.00</strong></div>
+            <div class="summary-row discount-row"><label for="discount">Discount</label><div class="discount-input-wrap"><span>₹</span><input id="discount" type="number" min="0" step="1" value="0" aria-label="Discount amount in rupees"></div></div>
+            <div class="summary-row tax-row"><label for="tax-rate">GST</label><div class="tax-picker"><select id="tax-rate" aria-label="GST rate"><option value="0">0%</option><option value="5" selected>5%</option><option value="12">12%</option><option value="18">18%</option></select><strong id="tax-amount">₹0.00</strong></div></div>
+            <div class="summary-row total-row"><span>Total due</span><strong id="grand-total">₹0.00</strong></div>
+            <div class="payment-label">Payment method</div>
+            <div class="payment-picker" role="group" aria-label="Payment method">
+              <button class="payment-button selected" type="button" data-payment="Cash"><span>₹</span> Cash</button>
+              <button class="payment-button" type="button" data-payment="UPI"><span>⌁</span> UPI</button>
+              <button class="payment-button" type="button" data-payment="Card"><span>▤</span> Card</button>
+            </div>
+            <button class="checkout-button" id="checkout-button" type="button"><span>Complete & print 2 bills</span><span class="checkout-arrow">→</span></button>
+            <p class="secure-note"><span>✦</span> Prints one customer receipt and one kitchen ticket</p>
+          </div>
+        </aside>
+      </div>
+
+      <section class="dashboard-page kitchen-page" id="kitchen-page" hidden>
+        <div class="dashboard-heading">
+          <div><p class="eyebrow">LIVE ORDER PREPARATION</p><h1>Kitchen orders</h1><p class="dashboard-subtitle">Track orders from preparation through handoff.</p></div>
+          <div class="kitchen-tabs" role="group" aria-label="Kitchen order status">
+            <button class="kitchen-tab active" type="button" data-kitchen-view="active">Active <span id="active-order-count">0</span></button>
+            <button class="kitchen-tab" type="button" data-kitchen-view="completed">Completed</button>
+          </div>
+        </div>
+        <div class="kitchen-orders" id="kitchen-orders" aria-live="polite"></div>
+      </section>
+
+      <section class="dashboard-page" id="customers-page" hidden>
+        <div class="dashboard-heading">
+          <div><p class="eyebrow">KNOW YOUR REGULARS</p><h1>Customers</h1><p class="dashboard-subtitle">Keep customer details handy and see their visit history.</p></div>
+          <button class="button button-primary" id="open-customer-modal" type="button"><span>＋</span> Add customer</button>
+        </div>
+        <div class="dashboard-stats" id="customer-stats"></div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-heading">
+            <div><h2>Customer list</h2><p>Customers you've added or billed by name.</p></div>
+            <label class="dashboard-search"><span aria-hidden="true">⌕</span><input id="customer-search" type="search" placeholder="Search customers..." aria-label="Search customers"></label>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Customer</th><th>WhatsApp</th><th>Bills</th><th>Total spent</th><th>Last visit</th></tr></thead>
+              <tbody id="customer-table-body"></tbody>
+            </table>
+            <div class="dashboard-empty" id="customer-empty" hidden>No customers yet. Add a customer or enter a name when creating a bill.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-page" id="reports-page" hidden>
+        <div class="dashboard-heading">
+          <div><p class="eyebrow">A CLEAR VIEW OF YOUR CAFE</p><h1>Sales reports</h1><p class="dashboard-subtitle">See how your cafe is doing at a glance.</p></div>
+          <label class="report-period">Show
+            <select id="report-period" aria-label="Report date range">
+              <option value="today">Today</option>
+              <option value="7days" selected>Last 7 days</option>
+              <option value="month">This month</option>
+              <option value="all">All time</option>
+            </select>
+          </label>
+        </div>
+        <div class="report-stats" id="report-stats"></div>
+        <div class="report-grid">
+          <div class="dashboard-card sales-card">
+            <div class="dashboard-card-heading"><div><h2>Daily sales</h2><p id="sales-chart-caption">Sales for the selected period</p></div></div>
+            <div class="sales-chart" id="sales-chart"></div>
+          </div>
+          <div class="dashboard-card payments-card">
+            <div class="dashboard-card-heading"><div><h2>Payment methods</h2><p>How customers paid</p></div></div>
+            <div class="payment-breakdown" id="payment-breakdown"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-page settings-page" id="settings-page" hidden>
+        <div class="dashboard-heading">
+          <div><p class="eyebrow">MAKE IT YOURS</p><h1>Shop settings</h1><p class="dashboard-subtitle">Your details appear on printed bills and stay saved on this device.</p></div>
+        </div>
+        <form id="settings-form">
+          <div class="settings-grid">
+            <section class="dashboard-card settings-card">
+              <div class="dashboard-card-heading"><div><h2>Shop details</h2><p>Add the information customers need to find you.</p></div></div>
+              <label class="modal-field">Shop name<input name="shopName" required maxlength="70" placeholder="e.g. Lazzat Cafe"></label>
+              <label class="modal-field">Shop address<textarea name="address" rows="3" maxlength="180" placeholder="Street, area, city and PIN code"></textarea></label>
+              <div class="modal-fields-row">
+                <label class="modal-field">Phone number<input name="phone" type="tel" maxlength="20" placeholder="e.g. 98765 43210"></label>
+                <label class="modal-field">Email address<input name="email" type="email" maxlength="80" placeholder="hello@yourcafe.in"></label>
+              </div>
+              <div class="modal-fields-row">
+                <label class="modal-field">GSTIN <span class="optional">(optional)</span><input name="gstin" maxlength="20" placeholder="Your GST number"></label>
+                <label class="modal-field">FSSAI number <span class="optional">(optional)</span><input name="fssai" maxlength="30" placeholder="Food license number"></label>
+              </div>
+            </section>
+            <section class="dashboard-card settings-card">
+              <div class="dashboard-card-heading"><div><h2>Bill preferences</h2><p>Choose the defaults for new bills.</p></div></div>
+              <label class="modal-field">Default GST rate
+                <select name="defaultTaxRate">
+                  <option value="0">0%</option>
+                  <option value="5">5%</option>
+                  <option value="12">12%</option>
+                  <option value="18">18%</option>
+                </select>
+              </label>
+              <label class="modal-field">Receipt message <span class="optional">(optional)</span><textarea name="receiptFooter" rows="3" maxlength="100" placeholder="Thank you for visiting!"></textarea></label>
+              <div class="settings-tip"><span>✦</span><p>These details are printed on every bill. You can still change the GST rate for an individual order.</p></div>
+            </section>
+            <section class="dashboard-card settings-card data-backup-card">
+              <div class="dashboard-card-heading"><div><h2>Data backup &amp; restore</h2><p>Download your cafe data or restore it from a backup file.</p></div></div>
+              <p class="backup-includes">Backup includes your menu, bills, customers, and shop settings.</p>
+              <div class="backup-actions">
+                <button class="button button-primary" id="download-backup" type="button">Download backup</button>
+                <button class="button button-outline" id="restore-backup" type="button">Restore from file</button>
+                <input id="backup-file" type="file" accept="application/json,.json" hidden>
+              </div>
+              <p class="backup-warning">Restoring replaces the data saved on this device. Download a backup first if you may need the current data later.</p>
+            </section>
+          </div>
+          <div class="settings-actions"><span>Settings are saved only on this device.</span><button class="button button-primary" type="submit">Save shop settings <span>→</span></button></div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <button class="mobile-bill-dock" id="mobile-bill-dock" type="button" hidden>
+    <span class="mobile-bill-copy"><span id="mobile-bill-count">0 items in bill</span><strong id="mobile-bill-total">₹0.00</strong></span>
+    <span class="mobile-bill-action">View bill <b>→</b></span>
+  </button>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog class="modal" id="menu-modal">
+    <form id="menu-form" method="dialog">
+      <div class="modal-heading"><div><p class="eyebrow">MENU MANAGEMENT</p><h2 id="menu-modal-title">Add a menu item</h2></div><button class="icon-button modal-close" type="button" aria-label="Close">×</button></div>
+      <input name="id" type="hidden">
+      <label class="modal-field">Item name<input name="name" required maxlength="45" placeholder="e.g. Avocado toast"></label>
+      <div class="modal-fields-row">
+        <label class="modal-field">Price (₹)<input name="price" type="number" min="1" step="0.01" required placeholder="180"></label>
+      <label class="modal-field">Category<select name="category" required><option value="Snacks">Snacks</option><option value="Meals">Meals</option><option value="Drinks">Drinks</option><option value="Dessert">Dessert</option><option value="Other">Other</option></select></label>
+      </div>
+      <div class="modal-actions"><button class="button button-outline modal-cancel" type="button">Cancel</button><button class="button button-primary" id="menu-submit-label" type="submit"><span id="menu-submit-text">Add to menu</span><span>→</span></button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal history-modal" id="history-modal">
+    <div class="modal-heading"><div><p class="eyebrow">YOUR COUNTER, YOUR RECORDS</p><h2>Bill history</h2></div><button class="icon-button history-close" type="button" aria-label="Close">×</button></div>
+    <div class="history-list" id="history-list"></div>
+  </dialog>
+
+  <dialog class="modal customer-modal" id="customer-modal">
+    <form id="customer-form">
+      <div class="modal-heading"><div><p class="eyebrow">ADD TO YOUR CUSTOMER LIST</p><h2>New customer</h2></div><button class="icon-button customer-close" type="button" aria-label="Close">×</button></div>
+      <label class="modal-field">Customer name<input name="name" required maxlength="60" placeholder="e.g. Ananya Rao"></label>
+      <label class="modal-field">WhatsApp number <span class="optional">(optional)</span><input name="phone" type="tel" maxlength="20" placeholder="10-digit number or +91 98765 43210"></label>
+      <div class="modal-actions"><button class="button button-outline customer-cancel" type="button">Cancel</button><button class="button button-primary" type="submit">Save customer <span>→</span></button></div>
+    </form>
+  </dialog>
+
+  <datalist id="customer-options"></datalist>
+  <section class="print-receipt" id="print-receipt" aria-hidden="true"></section>
+  <section class="kitchen-print-ticket" id="kitchen-print-ticket" aria-hidden="true"></section>
+  <script src="app.js"></script>
+</body>
+</html>
