@@ -28,7 +28,7 @@
           <div><small>Today's sales</small><strong id="today-sales">₹0.00</strong></div>
         </div>
         <div class="offline-status"><span></span> All changes saved on this device</div>
-        <div class="developer-credit">Developed by <strong>Shariff Tech</strong></div>
+        <div class="developer-credit">© SHARIFF TECH | 8680857511</div>
       </div>
     </aside>
 
@@ -80,17 +80,11 @@
               </div>
             </div>
           </div>
-          <div class="cart-heading"><span>ITEM</span><span>QTY</span><span class="align-right">AMOUNT</span></div>
-          <div class="cart-items" id="cart-items"></div>
-          <div class="empty-cart" id="empty-cart">
-            <div class="empty-cart-icon">♧</div>
-            <strong>Your bill is empty</strong>
-            <span>Choose an item from the menu to get started.</span>
-          </div>
           <div class="bill-summary">
             <div class="summary-row"><span>Subtotal</span><strong id="subtotal">₹0.00</strong></div>
             <div class="summary-row discount-row"><label for="discount">Discount</label><div class="discount-input-wrap"><span>₹</span><input id="discount" type="number" min="0" step="1" value="0" aria-label="Discount amount in rupees"></div></div>
             <div class="summary-row tax-row"><label for="tax-rate">GST</label><div class="tax-picker"><select id="tax-rate" aria-label="GST rate"><option value="0">0%</option><option value="5" selected>5%</option><option value="12">12%</option><option value="18">18%</option></select><strong id="tax-amount">₹0.00</strong></div></div>
+            <div class="summary-row"><span>Round off</span><strong id="round-off">₹0.00</strong></div>
             <div class="summary-row total-row"><span>Total due</span><strong id="grand-total">₹0.00</strong></div>
             <div class="payment-label">Payment method</div>
             <div class="payment-picker" role="group" aria-label="Payment method">
@@ -98,8 +92,19 @@
               <button class="payment-button" type="button" data-payment="UPI"><span>⌁</span> UPI</button>
               <button class="payment-button" type="button" data-payment="Card"><span>▤</span> Card</button>
             </div>
-            <button class="checkout-button" id="checkout-button" type="button"><span>Complete & print 2 bills</span><span class="checkout-arrow">→</span></button>
-            <p class="secure-note"><span>✦</span> Prints one customer receipt and one kitchen ticket</p>
+            <button class="checkout-button" id="checkout-button" type="button"><span>Complete bill</span><span class="checkout-arrow">→</span></button>
+            <div class="print-actions" id="print-actions" hidden>
+              <button class="button button-outline" id="print-customer-bill" type="button">Print customer bill</button>
+              <button class="button button-primary" id="print-kot" type="button">Print KOT</button>
+            </div>
+            <p class="secure-note"><span>✦</span> Complete once, then print the customer bill and KOT separately</p>
+          </div>
+          <div class="cart-heading"><span>ITEM</span><span>QTY</span><span class="align-right">AMOUNT</span></div>
+          <div class="cart-items" id="cart-items"></div>
+          <div class="empty-cart" id="empty-cart">
+            <div class="empty-cart-icon">♧</div>
+            <strong>Your bill is empty</strong>
+            <span>Choose an item from the menu to get started.</span>
           </div>
         </aside>
       </div>
@@ -190,8 +195,12 @@
                   <option value="18">18%</option>
                 </select>
               </label>
-              <label class="modal-field">Receipt message <span class="optional">(optional)</span><textarea name="receiptFooter" rows="3" maxlength="100" placeholder="Thank you for visiting!"></textarea></label>
+              <label class="modal-field">Receipt message <span class="optional">(optional)</span><textarea name="receiptFooter" rows="3" maxlength="100" placeholder="Your Happiness Is Our Special Ingredient"></textarea></label>
               <div class="settings-tip"><span>✦</span><p>These details are printed on every bill. You can still change the GST rate for an individual order.</p></div>
+              <div class="printer-setup">
+                <div><strong>58 mm thermal printer</strong><p>Pair by Bluetooth or connect by USB-C, install the Helett driver if needed, then select the printer and 58 mm paper in the browser print dialog.</p></div>
+                <button class="button button-outline" id="printer-test" type="button">Print test receipt</button>
+              </div>
             </section>
             <section class="dashboard-card settings-card data-backup-card">
               <div class="dashboard-card-heading"><div><h2>Data backup &amp; restore</h2><p>Download your cafe data or restore it from a backup file.</p></div></div>
@@ -247,6 +256,7 @@
   <datalist id="customer-options"></datalist>
   <section class="print-receipt" id="print-receipt" aria-hidden="true"></section>
   <section class="kitchen-print-ticket" id="kitchen-print-ticket" aria-hidden="true"></section>
+  <script src="qrcode-generator.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

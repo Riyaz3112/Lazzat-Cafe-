@@ -1,6 +1,8 @@
 const STORAGE_KEYS = {
   menu: "littleBean.menu.v1",
+  menuCardImported: "littleBean.menuCardImported.v1",
   orders: "littleBean.orders.v1",
+  billNumberingReset: "littleBean.billNumberingReset.v1",
   customers: "littleBean.customers.v1",
   settings: "littleBean.settings.v1",
 };
@@ -13,13 +15,112 @@ const defaultSettings = {
   gstin: "",
   fssai: "",
   defaultTaxRate: 5,
-  receiptFooter: "Made with love & a little coffee.",
+  receiptFooter: "Your Happiness Is Our Special Ingredient",
 };
+
+const menuCardItems = [
+  { id: "dark-chocolate-waffle-classic", name: "Dark Chocolate Waffle - Classic", category: "Dessert", price: 89 },
+  { id: "dark-chocolate-waffle-brownie", name: "Dark Chocolate Waffle - Brownie", category: "Dessert", price: 99 },
+  { id: "dark-chocolate-waffle-red-velvet", name: "Dark Chocolate Waffle - Red Velvet", category: "Dessert", price: 99 },
+  { id: "milk-chocolate-waffle-classic", name: "Milk Chocolate Waffle - Classic", category: "Dessert", price: 89 },
+  { id: "milk-chocolate-waffle-brownie", name: "Milk Chocolate Waffle - Brownie", category: "Dessert", price: 99 },
+  { id: "milk-chocolate-waffle-red-velvet", name: "Milk Chocolate Waffle - Red Velvet", category: "Dessert", price: 99 },
+  { id: "white-chocolate-waffle-classic", name: "White Chocolate Waffle - Classic", category: "Dessert", price: 89 },
+  { id: "white-chocolate-waffle-brownie", name: "White Chocolate Waffle - Brownie", category: "Dessert", price: 99 },
+  { id: "white-chocolate-waffle-red-velvet", name: "White Chocolate Waffle - Red Velvet", category: "Dessert", price: 99 },
+  { id: "strawberry-waffle-classic", name: "Strawberry Waffle - Classic", category: "Dessert", price: 89 },
+  { id: "strawberry-waffle-brownie", name: "Strawberry Waffle - Brownie", category: "Dessert", price: 99 },
+  { id: "strawberry-waffle-red-velvet", name: "Strawberry Waffle - Red Velvet", category: "Dessert", price: 99 },
+  { id: "biscoff-waffle-classic", name: "Biscoff Waffle - Classic", category: "Dessert", price: 109 },
+  { id: "biscoff-waffle-brownie", name: "Biscoff Waffle - Brownie", category: "Dessert", price: 119 },
+  { id: "biscoff-waffle-red-velvet", name: "Biscoff Waffle - Red Velvet", category: "Dessert", price: 119 },
+  { id: "kumba-pista-waffle-classic", name: "Kumba Pista Waffle - Classic", category: "Dessert", price: 119 },
+  { id: "kumba-pista-waffle-brownie", name: "Kumba Pista Waffle - Brownie", category: "Dessert", price: 129 },
+  { id: "kumba-pista-waffle-red-velvet", name: "Kumba Pista Waffle - Red Velvet", category: "Dessert", price: 129 },
+  { id: "classic-french-fries-medium", name: "Classic French Fries - Medium", category: "Snacks", price: 59 },
+  { id: "classic-french-fries-large", name: "Classic French Fries - Large", category: "Snacks", price: 79 },
+  { id: "peri-peri-french-fries-medium", name: "Peri Peri French Fries - Medium", category: "Snacks", price: 69 },
+  { id: "peri-peri-french-fries-large", name: "Peri Peri French Fries - Large", category: "Snacks", price: 89 },
+  { id: "classic-loaded-fries", name: "Classic Loaded Fries", category: "Snacks", price: 99 },
+  { id: "classic-cheese-loaded-fries", name: "Classic Cheese Loaded Fries", category: "Snacks", price: 119 },
+  { id: "korean-hot-crispy-loaded-fries", name: "Korean Hot & Crispy Loaded Fries", category: "Snacks", price: 129 },
+  { id: "veg-momos-steam", name: "Veg Momos - Steam (5 pcs)", category: "Snacks", price: 59 },
+  { id: "veg-momos-fried", name: "Veg Momos - Fried (5 pcs)", category: "Snacks", price: 69 },
+  { id: "chicken-momos-steam", name: "Chicken Momos - Steam (5 pcs)", category: "Snacks", price: 69 },
+  { id: "chicken-momos-fried", name: "Chicken Momos - Fried (5 pcs)", category: "Snacks", price: 79 },
+  { id: "super-veg-wrap", name: "Super Veg Wrap", category: "Meals", price: 59 },
+  { id: "chicken-wrap", name: "Chicken Wrap", category: "Meals", price: 79 },
+  { id: "crispy-chicken-wrap", name: "Crispy Chicken Wrap", category: "Meals", price: 89 },
+  { id: "korean-hotspicy-wrap", name: "Korean Hotspicy Wrap", category: "Meals", price: 99 },
+  { id: "grill-veg-cheese-sandwich", name: "Grill Veg & Cheese Sandwich", category: "Meals", price: 69 },
+  { id: "corn-cheese-sandwich", name: "Corn Cheese Sandwich", category: "Meals", price: 69 },
+  { id: "tandoori-chicken-sandwich", name: "Tandoori Chicken Sandwich", category: "Meals", price: 79 },
+  { id: "crispy-chicken-sandwich", name: "Crispy Chicken Sandwich", category: "Meals", price: 99 },
+  { id: "korean-hotspicy-sandwich", name: "Korean Hotspicy Sandwich", category: "Meals", price: 99 },
+  { id: "cheese-corn-pizza", name: "Cheese Corn Pizza", category: "Meals", price: 119 },
+  { id: "chicken-cheese-pizza", name: "Chicken Cheese Pizza", category: "Meals", price: 139 },
+  { id: "crispy-chicken-pizza", name: "Crispy Chicken Pizza", category: "Meals", price: 149 },
+  { id: "kiddy-veg-burger", name: "Kiddy Veg Burger", category: "Meals", price: 49 },
+  { id: "veg-burger", name: "Veg Burger", category: "Meals", price: 69 },
+  { id: "classic-chicken-burger", name: "Classic Chicken Burger", category: "Meals", price: 79 },
+  { id: "little-dia-burger", name: "Little Dia Burger", category: "Meals", price: 79 },
+  { id: "crispy-fried-burger", name: "Crispy Fried Burger", category: "Meals", price: 99 },
+  { id: "tandoori-crispy-fried-burger", name: "Tandoori Crispy Fried Burger", category: "Meals", price: 99 },
+  { id: "korean-hotspicy-burger", name: "Korean Hotspicy Burger", category: "Meals", price: 119 },
+  { id: "zinger-burger", name: "Zinger Burger", category: "Meals", price: 139 },
+  { id: "classic-lollipop-3-pcs", name: "Classic Lollipop (3 pcs)", category: "Snacks", price: 99 },
+  { id: "classic-lollipop-5-pcs", name: "Classic Lollipop (5 pcs)", category: "Snacks", price: 149 },
+  { id: "korean-lollipop-3-pcs", name: "Korean Lollipop (3 pcs)", category: "Snacks", price: 119 },
+  { id: "korean-lollipop-5-pcs", name: "Korean Lollipop (5 pcs)", category: "Snacks", price: 169 },
+  { id: "classic-popcorn", name: "Classic Popcorn", category: "Snacks", price: 89 },
+  { id: "korean-popcorn", name: "Korean Popcorn", category: "Snacks", price: 99 },
+  { id: "veg-nuggets", name: "Veg Nuggets", category: "Snacks", price: 69 },
+  { id: "chicken-nuggets", name: "Chicken Nuggets", category: "Snacks", price: 79 },
+  { id: "peri-peri-strips-3-pcs", name: "Peri Peri Strips (3 pcs)", category: "Snacks", price: 99 },
+  { id: "peri-peri-strips-5-pcs", name: "Peri Peri Strips (5 pcs)", category: "Snacks", price: 149 },
+  { id: "classic-fried-chicken-2-pcs", name: "Classic Fried Chicken (2 pcs)", category: "Snacks", price: 109 },
+  { id: "classic-fried-chicken-5-pcs", name: "Classic Fried Chicken (5 pcs)", category: "Snacks", price: 249 },
+  { id: "fire-crispy-chicken-2-pcs", name: "Fire Crispy Chicken (2 pcs)", category: "Snacks", price: 109 },
+  { id: "fire-crispy-chicken-5-pcs", name: "Fire Crispy Chicken (5 pcs)", category: "Snacks", price: 249 },
+  { id: "korean-hotspicy-chicken-2-pcs", name: "Korean Hotspicy Chicken (2 pcs)", category: "Snacks", price: 115 },
+  { id: "korean-hotspicy-chicken-5-pcs", name: "Korean Hotspicy Chicken (5 pcs)", category: "Snacks", price: 269 },
+  { id: "mint-virgin-mojito", name: "Mint Virgin Mojito", category: "Drinks", price: 59 },
+  { id: "blue-mojito", name: "Blue Mojito", category: "Drinks", price: 59 },
+  { id: "strawberry-mojito", name: "Strawberry Mojito", category: "Drinks", price: 59 },
+  { id: "green-apple-mojito", name: "Green Apple Mojito", category: "Drinks", price: 59 },
+  { id: "blueberry-mojito", name: "Blueberry Mojito", category: "Drinks", price: 59 },
+  { id: "cold-coffee", name: "Cold Coffee", category: "Drinks", price: 79 },
+  { id: "oreo-coffee", name: "Oreo Coffee", category: "Drinks", price: 79 },
+  { id: "passion-fruit-shake", name: "Passion Fruit Shake", category: "Drinks", price: 79 },
+  { id: "banana-shake", name: "Banana Shake", category: "Drinks", price: 79 },
+  { id: "kit-kat-shake", name: "Kit-Kat Shake", category: "Drinks", price: 79 },
+  { id: "strawberry-shake", name: "Strawberry Shake", category: "Drinks", price: 79 },
+  { id: "dry-fruit-shake", name: "Dry Fruit Shake", category: "Drinks", price: 129 },
+  { id: "brownie-shake", name: "Brownie Shake", category: "Drinks", price: 129 },
+  { id: "biscoff-shake", name: "Biscoff Shake", category: "Drinks", price: 129 },
+  { id: "milo-shake", name: "Milo Shake", category: "Drinks", price: 129 },
+  { id: "brownie-dessert", name: "Brownie", category: "Dessert", price: 89 },
+  { id: "triple-chocolate-brownie", name: "Triple Chocolate Brownie", category: "Dessert", price: 99 },
+  { id: "brownie-with-ice-cream", name: "Brownie with Ice Cream", category: "Dessert", price: 109 },
+  { id: "waffle-ice-cream", name: "Waffle Ice Cream", category: "Dessert", price: 109 },
+  { id: "sizzling-brownie", name: "Sizzling Brownie", category: "Dessert", price: 139 },
+  { id: "coffee-ice-cream", name: "Coffee Ice Cream", category: "Dessert", price: 49 },
+  { id: "strawberry-ice-cream", name: "Strawberry Ice Cream", category: "Dessert", price: 49 },
+  { id: "pista-ice-cream", name: "Pista Ice Cream", category: "Dessert", price: 49 },
+  { id: "butterscotch-ice-cream", name: "Butterscotch Ice Cream", category: "Dessert", price: 49 },
+  { id: "blackcurrant-ice-cream", name: "Blackcurrant Ice Cream", category: "Dessert", price: 59 },
+  { id: "spanish-delight-ice-cream", name: "Spanish Delight Ice Cream", category: "Dessert", price: 59 },
+  { id: "chocolate-ice-cream", name: "Chocolate Ice Cream", category: "Dessert", price: 59 },
+  { id: "kulfi-ice-cream", name: "Kulfi Ice Cream", category: "Dessert", price: 59 },
+  { id: "red-velvet-ice-cream", name: "Red Velvet Ice Cream", category: "Dessert", price: 69 },
+  { id: "tender-coconut-ice-cream", name: "Tender Coconut Ice Cream", category: "Dessert", price: 69 },
+];
 
 const defaultMenu = [
   { id: "avocado-toast", name: "Avocado toast", category: "Meals", price: 240 },
   { id: "grilled-sandwich", name: "Grilled sandwich", category: "Meals", price: 210 },
   { id: "french-fries", name: "French fries", category: "Snacks", price: 150 },
+  ...menuCardItems,
 ];
 
 const categoryColors = {
@@ -55,17 +156,32 @@ let menu = Array.isArray(storedMenu)
     return cleanItem;
   })
   : defaultMenu;
-const shouldMigrateMenu = Array.isArray(storedMenu) && storedMenu.some((item) => item && (
+let shouldMigrateMenu = Array.isArray(storedMenu) && storedMenu.some((item) => item && (
   Object.prototype.hasOwnProperty.call(item, "emoji")
   || removedMenuCategories.has(item.category)
   || legacyMenuCategories.has(item.category)
 ));
+const hasImportedMenuCard = readStorage(STORAGE_KEYS.menuCardImported, false) === true;
+if (!hasImportedMenuCard) {
+  const existingMenuIds = new Set(menu.map((item) => item && item.id));
+  const existingMenuNames = new Set(menu.map((item) => item && typeof item.name === "string" ? item.name.trim().toLocaleLowerCase() : ""));
+  const missingMenuCardItems = menuCardItems.filter((item) => (
+    !existingMenuIds.has(item.id) && !existingMenuNames.has(item.name.toLocaleLowerCase())
+  ));
+  if (missingMenuCardItems.length) {
+    menu = [...menu, ...missingMenuCardItems];
+    shouldMigrateMenu = true;
+  }
+}
 let orders = readStorage(STORAGE_KEYS.orders, []);
 let customers = readStorage(STORAGE_KEYS.customers, []);
 const storedSettings = readStorage(STORAGE_KEYS.settings, {});
 let settings = { ...defaultSettings, ...(storedSettings && typeof storedSettings === "object" ? storedSettings : {}) };
+const shouldClearOldBills = readStorage(STORAGE_KEYS.billNumberingReset, false) !== true;
 const shouldRenameDefaultShop = settings.shopName === "Little Bean Cafe";
+const shouldUpdateDefaultReceiptFooter = settings.receiptFooter === "Made with love & a little coffee.";
 if (shouldRenameDefaultShop) settings.shopName = defaultSettings.shopName;
+if (shouldUpdateDefaultReceiptFooter) settings.receiptFooter = defaultSettings.receiptFooter;
 if (!Array.isArray(menu)) menu = defaultMenu;
 if (!Array.isArray(orders)) orders = [];
 if (!Array.isArray(customers)) customers = [];
@@ -75,6 +191,7 @@ let cart = new Map();
 let activePage = "billing";
 let orderType = "Dine in";
 let paymentMethod = "Cash";
+let lastCompletedOrder = null;
 let toastTimer;
 
 const elements = {
@@ -89,11 +206,15 @@ const elements = {
   cartItems: document.getElementById("cart-items"),
   emptyCart: document.getElementById("empty-cart"),
   subtotal: document.getElementById("subtotal"),
+  roundOff: document.getElementById("round-off"),
   discount: document.getElementById("discount"),
   taxRate: document.getElementById("tax-rate"),
   taxAmount: document.getElementById("tax-amount"),
   grandTotal: document.getElementById("grand-total"),
   checkout: document.getElementById("checkout-button"),
+  printActions: document.getElementById("print-actions"),
+  printCustomerBill: document.getElementById("print-customer-bill"),
+  printKot: document.getElementById("print-kot"),
   customer: document.getElementById("customer-name"),
   customerPhone: document.getElementById("customer-whatsapp"),
   todaySales: document.getElementById("today-sales"),
@@ -124,12 +245,37 @@ const elements = {
   downloadBackup: document.getElementById("download-backup"),
   restoreBackup: document.getElementById("restore-backup"),
   backupFile: document.getElementById("backup-file"),
+  printerTest: document.getElementById("printer-test"),
 };
 
 let kitchenView = "active";
+let printingTestReceipt = false;
 
-if (shouldMigrateMenu) persist(STORAGE_KEYS.menu, menu);
-if (shouldRenameDefaultShop) persist(STORAGE_KEYS.settings, settings);
+if (shouldClearOldBills) {
+  const previousOrders = orders;
+  orders = [];
+  if (persist(STORAGE_KEYS.orders, orders)) {
+    if (persist(STORAGE_KEYS.billNumberingReset, true)) {
+      showToast("Old bills cleared. New bill and token numbering has started.");
+    } else {
+      orders = previousOrders;
+      if (!persist(STORAGE_KEYS.orders, previousOrders)) {
+        console.error("Unable to restore the previous bills after the numbering reset failed.");
+      }
+    }
+  } else {
+    orders = previousOrders;
+  }
+}
+
+if (shouldMigrateMenu) {
+  if (persist(STORAGE_KEYS.menu, menu) && !hasImportedMenuCard) {
+    persist(STORAGE_KEYS.menuCardImported, true);
+  }
+} else if (!hasImportedMenuCard) {
+  persist(STORAGE_KEYS.menuCardImported, true);
+}
+if (shouldRenameDefaultShop || shouldUpdateDefaultReceiptFooter) persist(STORAGE_KEYS.settings, settings);
 
 function applyShopSettings() {
   document.getElementById("shop-name-display").textContent = settings.shopName;
@@ -205,7 +351,10 @@ function validateBackup(backup) {
     ))
     && (order.customerPhone === undefined || typeof order.customerPhone === "string")
     && (order.whatsappSentAt === undefined || typeof order.whatsappSentAt === "string")
-    && (order.status === undefined || ["Preparing", "Ready", "Completed"].includes(order.status))
+    && (order.status === undefined || ["Preparing", "Ready", "Completed", "Cancelled"].includes(order.status))
+    && (order.cancelledAt === undefined || (
+      typeof order.cancelledAt === "string" && !Number.isNaN(Date.parse(order.cancelledAt))
+    ))
   ));
   const validSettings = isRecord(data.settings)
     && ["shopName", "address", "phone", "email", "gstin", "fssai", "receiptFooter"].every((key) => (
@@ -390,13 +539,23 @@ function calculateTotals() {
   const taxableAmount = subtotal - discount;
   const taxRate = Number(elements.taxRate.value) || 0;
   const tax = taxableAmount * taxRate / 100;
-  return { subtotal, discount, taxRate, tax, total: taxableAmount + tax };
+  const unroundedTotal = taxableAmount + tax;
+  const total = Math.round(unroundedTotal);
+  const roundOff = Number((total - unroundedTotal).toFixed(2));
+  return { subtotal, discount, taxRate, tax, roundOff, total };
+}
+
+function formatRoundOff(amount = 0) {
+  const value = Number.isFinite(amount) ? amount : 0;
+  const sign = value > 0 ? "+" : value < 0 ? "−" : "";
+  return `${sign}${rupees.format(Math.abs(value))}`;
 }
 
 function renderCart() {
   elements.cartItems.innerHTML = "";
   elements.emptyCart.hidden = cart.size > 0;
   elements.checkout.disabled = cart.size === 0;
+  elements.printActions.hidden = !lastCompletedOrder || cart.size > 0;
   cart.forEach((quantity, id) => {
     const item = menu.find((entry) => entry.id === id);
     if (!item) {
@@ -440,6 +599,7 @@ function renderCart() {
 
   const totals = calculateTotals();
   elements.subtotal.textContent = rupees.format(totals.subtotal);
+  elements.roundOff.textContent = formatRoundOff(totals.roundOff);
   elements.taxAmount.textContent = rupees.format(totals.tax);
   elements.grandTotal.textContent = rupees.format(totals.total);
   elements.products.querySelectorAll(".product-card").forEach((card) => {
@@ -468,12 +628,19 @@ function renderMobileBillDock(total) {
 
 function getTodayOrders() {
   const today = new Date().toLocaleDateString("en-CA");
-  return orders.filter((order) => new Date(order.createdAt).toLocaleDateString("en-CA") === today);
+  return orders.filter((order) => (
+    order.status !== "Cancelled"
+    && new Date(order.createdAt).toLocaleDateString("en-CA") === today
+  ));
 }
 
 function renderTodaySales() {
   const sales = getTodayOrders().reduce((sum, order) => sum + order.total, 0);
   elements.todaySales.textContent = rupees.format(sales);
+}
+
+function formatTokenNumber(tokenNumber) {
+  return String(tokenNumber).padStart(2, "0");
 }
 
 function renderKitchenOrders() {
@@ -506,7 +673,7 @@ function renderKitchenOrders() {
     const identity = document.createElement("div");
     const id = document.createElement("div");
     id.className = "kitchen-ticket-id";
-    id.textContent = order.id;
+    id.textContent = order.tokenNumber ? `Token #${formatTokenNumber(order.tokenNumber)} · ${order.id}` : order.id;
     const time = document.createElement("div");
     time.className = "kitchen-ticket-time";
     time.textContent = new Date(order.createdAt).toLocaleString("en-IN", {
@@ -578,13 +745,21 @@ function createKitchenTicket(order) {
   shop.textContent = settings.shopName;
   const heading = document.createElement("div");
   heading.className = "kitchen-print-heading";
-  heading.textContent = "KITCHEN ORDER";
+  heading.textContent = "KOT";
+  const token = document.createElement("div");
+  token.className = "kitchen-print-token";
+  token.textContent = order.tokenNumber ? `TOKEN #${formatTokenNumber(order.tokenNumber)}` : "KITCHEN ORDER";
   const details = document.createElement("div");
   details.className = "kitchen-print-details";
-  details.textContent = `${order.id} · ${new Date(order.createdAt).toLocaleString("en-IN")}`;
+  details.textContent = `${order.id} · ${new Date(order.createdAt).toLocaleString("en-IN", {
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  })}`;
   const type = document.createElement("div");
   type.className = "kitchen-print-details";
-  type.textContent = `${order.orderType}${order.customer ? ` · ${order.customer}` : ""}`;
+  type.textContent = `${order.orderType} · ${order.customer || "Guest"}`;
   const divider = document.createElement("div");
   divider.className = "kitchen-print-divider";
   const items = document.createElement("ul");
@@ -594,23 +769,46 @@ function createKitchenTicket(order) {
     const name = document.createElement("span");
     name.textContent = item.name;
     const quantity = document.createElement("strong");
-    quantity.textContent = `× ${item.quantity}`;
+    quantity.textContent = `x ${item.quantity}`;
     line.append(name, quantity);
     items.append(line);
   });
-  ticket.append(shop, heading, details, type, divider, items);
+  const topFeedGap = document.createElement("div");
+  topFeedGap.className = "print-feed-gap";
+  topFeedGap.innerHTML = "<br>".repeat(6);
+  const bottomFeedGap = topFeedGap.cloneNode(true);
+  bottomFeedGap.innerHTML = "<br>".repeat(12);
+  ticket.append(topFeedGap, shop, heading, token, details, type, divider, items, bottomFeedGap);
   elements.kitchenPrintTicket.replaceChildren(ticket);
 }
 
 function printKitchenTicket(order) {
+  if (order.status === "Cancelled") return;
   createKitchenTicket(order);
   document.body.classList.add("printing-kitchen-ticket");
   window.print();
 }
 
+function printCustomerBill(order) {
+  if (order.status === "Cancelled") return;
+  try {
+    createReceipt(order);
+  } catch (error) {
+    console.error("Unable to create the payment QR for this receipt.", error);
+    showToast("Couldn't create the payment QR. The receipt was not printed.");
+    return;
+  }
+  document.body.classList.remove("printing-kitchen-ticket");
+  window.print();
+}
+
 window.addEventListener("afterprint", () => {
-  document.body.classList.remove("printing-kitchen-ticket", "printing-order-packet");
+  document.body.classList.remove("printing-kitchen-ticket");
   elements.kitchenPrintTicket.replaceChildren();
+  if (printingTestReceipt) {
+    elements.receipt.replaceChildren();
+    printingTestReceipt = false;
+  }
 });
 
 function updateKitchenOrder(orderId, status) {
@@ -676,6 +874,7 @@ function renderCustomers() {
   const customerMap = new Map();
   customers.forEach((customer) => customerMap.set(normalizedName(customer.name), { ...customer, bills: [], totalSpent: 0 }));
   orders.forEach((order) => {
+    if (order.status === "Cancelled") return;
     const key = normalizedName(order.customer);
     if (!key) return;
     if (!customerMap.has(key)) {
@@ -731,10 +930,11 @@ function renderCustomers() {
 function getOrdersForReport(period) {
   const today = new Date();
   const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const activeOrders = orders.filter((order) => order.status !== "Cancelled");
   if (period === "7days") start.setDate(start.getDate() - 6);
   else if (period === "month") start.setDate(1);
-  else if (period === "all") return orders;
-  return orders.filter((order) => new Date(order.createdAt) >= start);
+  else if (period === "all") return activeOrders;
+  return activeOrders.filter((order) => new Date(order.createdAt) >= start);
 }
 
 function renderReports() {
@@ -830,8 +1030,27 @@ function renderReports() {
   }
 }
 
+function createPaymentQrSvg(order) {
+  const paymentParameters = new URLSearchParams({
+    mode: "01",
+    ver: "01",
+    pa: "9361445583@superyes",
+    pn: "SHAHIN M",
+    txntype: "pay",
+    qrmedium: "02",
+    am: order.total.toFixed(2),
+    cu: "INR",
+    tn: `Lazzat Cafe bill ${order.id}`,
+  });
+  const qr = qrcode(0, "M");
+  qr.addData(`upi://pay?${paymentParameters.toString()}`);
+  qr.make();
+  return qr.createSvgTag({ cellSize: 4, margin: 4, scalable: true });
+}
+
 function createReceipt(order) {
   const receipt = document.createElement("div");
+  receipt.className = "receipt-layout";
   const shopDetails = [];
   if (settings.address) {
     shopDetails.push(`<div class="receipt-muted">${settings.address.split(/\r?\n/).map(escapeHtml).join("<br>")}</div>`);
@@ -840,13 +1059,18 @@ function createReceipt(order) {
   if (contactDetails) shopDetails.push(`<div class="receipt-muted">${contactDetails}</div>`);
   if (settings.gstin) shopDetails.push(`<div class="receipt-muted">GSTIN: ${escapeHtml(settings.gstin)}</div>`);
   if (settings.fssai) shopDetails.push(`<div class="receipt-muted">FSSAI: ${escapeHtml(settings.fssai)}</div>`);
-  const receiptFooter = String(settings.receiptFooter || "").trim() || "Thank you for visiting!";
+  const receiptFooter = String(settings.receiptFooter || "").trim() || "Your Happiness Is Our Special Ingredient";
+  const roundOff = Number.isFinite(order.roundOff) ? order.roundOff : 0;
+  const paymentQrSvg = order.id === "PRINTER TEST" ? "" : createPaymentQrSvg(order);
   receipt.innerHTML = `
+    <div class="receipt-main">
+    <div class="print-feed-gap" aria-hidden="true"><br><br><br><br><br><br></div>
     <div class="receipt-center">
       <div class="receipt-brand">${escapeHtml(settings.shopName)}</div>
       <div class="receipt-muted">CAFE</div>
       ${shopDetails.join("")}
     </div>
+    ${order.tokenNumber ? `<div class="receipt-token">TOKEN #${escapeHtml(formatTokenNumber(order.tokenNumber))}</div>` : ""}
     <div class="receipt-rule"></div>
     <div class="receipt-line"><span>Bill</span><span>${escapeHtml(order.id)}</span></div>
     <div class="receipt-line"><span>Date</span><span>${escapeHtml(new Date(order.createdAt).toLocaleString("en-IN"))}</span></div>
@@ -859,11 +1083,34 @@ function createReceipt(order) {
     <div class="receipt-line"><span>Subtotal</span><span>${rupees.format(order.subtotal)}</span></div>
     ${order.discount ? `<div class="receipt-line"><span>Discount</span><span>−${rupees.format(order.discount)}</span></div>` : ""}
     <div class="receipt-line"><span>GST (${order.taxRate}%)</span><span>${rupees.format(order.tax)}</span></div>
+    <div class="receipt-line"><span>Round off</span><span>${formatRoundOff(roundOff)}</span></div>
     <div class="receipt-rule"></div>
     <div class="receipt-line receipt-total"><span>TOTAL</span><span>${rupees.format(order.total)}</span></div>
+    ${paymentQrSvg ? `<div class="receipt-payment"><div class="receipt-payment-label">SCAN TO PAY</div><div class="receipt-payment-amount">${rupees.format(order.total)}</div>${paymentQrSvg}</div>` : ""}
     <div class="receipt-center receipt-thanks">${escapeHtml(receiptFooter)}</div>
-    <div class="receipt-developer-credit">Developed by Shariff Tech</div>`;
+    <div class="receipt-developer-credit">© SHARIFF TECH | 8680857511</div>
+    </div>
+    <div class="print-feed-gap" aria-hidden="true"><br><br><br><br><br><br></div>`;
   elements.receipt.replaceChildren(receipt);
+}
+
+function printTestReceipt() {
+  const now = new Date().toISOString();
+  createReceipt({
+    id: "PRINTER TEST",
+    createdAt: now,
+    customer: "",
+    orderType: "Printer test",
+    paymentMethod: "—",
+    items: [{ name: "Thermal printer test", price: 0, quantity: 1 }],
+    subtotal: 0,
+    discount: 0,
+    taxRate: 0,
+    tax: 0,
+    total: 0,
+  });
+  printingTestReceipt = true;
+  window.print();
 }
 
 function escapeHtml(value) {
@@ -879,9 +1126,24 @@ function escapeHtml(value) {
 function checkout() {
   if (!cart.size) return;
   const totals = calculateTotals();
+  const createdAt = new Date().toISOString();
+  const orderDate = new Date(createdAt);
+  const tokenNumber = orders.filter((existingOrder) => {
+    const existingDate = new Date(existingOrder.createdAt);
+    return existingDate.getFullYear() === orderDate.getFullYear()
+      && existingDate.getMonth() === orderDate.getMonth()
+      && existingDate.getDate() === orderDate.getDate();
+  }).length + 1;
+  const monthCode = orderDate.toLocaleString("en-US", { month: "short" }).toUpperCase();
+  const billPrefix = `LC-${monthCode}-`;
+  const nextBillSequence = orders.reduce((highest, existingOrder) => {
+    const match = new RegExp(`^${billPrefix}(\\d+)$`).exec(existingOrder.id);
+    return Math.max(highest, match ? Number(match[1]) : 0);
+  }, 0) + 1;
   const order = {
-    id: `LB-${Date.now().toString().slice(-8)}`,
-    createdAt: new Date().toISOString(),
+    id: `${billPrefix}${String(nextBillSequence).padStart(3, "0")}`,
+    tokenNumber,
+    createdAt,
     customer: elements.customer.value.trim(),
     customerPhone: elements.customerPhone.value.trim(),
     orderType,
@@ -906,10 +1168,7 @@ function checkout() {
   renderTodaySales();
   renderKitchenOrders();
   const whatsappOpened = sendBillOnWhatsApp(order, false);
-  createReceipt(order);
-  createKitchenTicket(order);
-  document.body.classList.add("printing-order-packet");
-  window.print();
+  lastCompletedOrder = order;
   cart.clear();
   elements.customer.value = "";
   elements.customerPhone.value = "";
@@ -917,8 +1176,8 @@ function checkout() {
   elements.taxRate.value = String(settings.defaultTaxRate);
   renderCart();
   showToast(whatsappOpened
-    ? `Customer receipt and kitchen ticket printed. Send the bill in WhatsApp.`
-    : `Customer receipt and kitchen ticket printed. Add a WhatsApp number to send the bill.`);
+    ? "Bill completed. Print the customer bill and KOT separately; send the bill in WhatsApp."
+    : "Bill completed. Use the buttons to print the customer bill and KOT.");
 }
 
 function normalizeWhatsAppNumber(phone) {
@@ -928,6 +1187,10 @@ function normalizeWhatsAppNumber(phone) {
 }
 
 function sendBillOnWhatsApp(order, showFeedback = true) {
+  if (order.status === "Cancelled") {
+    if (showFeedback) showToast("Cancelled bills cannot be sent on WhatsApp.");
+    return false;
+  }
   const customer = customers.find((entry) => normalizedName(entry.name) === normalizedName(order.customer));
   const phone = normalizeWhatsAppNumber(order.customerPhone || (customer && customer.phone));
   if (!phone) {
@@ -946,11 +1209,12 @@ function sendBillOnWhatsApp(order, showFeedback = true) {
     `Subtotal: ${rupees.format(order.subtotal)}`,
     order.discount ? `Discount: -${rupees.format(order.discount)}` : null,
     `GST (${order.taxRate}%): ${rupees.format(order.tax)}`,
+    `Round off: ${formatRoundOff(order.roundOff)}`,
     `*Total: ${rupees.format(order.total)}*`,
     `Payment: ${order.paymentMethod}`,
     "",
-    "Thank you for visiting!",
-    "Developed by Shariff Tech",
+    "Your Happiness Is Our Special Ingredient",
+    "© SHARIFF TECH | 8680857511",
   ].filter((line) => line !== null).join("\n");
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank", "noopener,noreferrer");
@@ -959,7 +1223,7 @@ function sendBillOnWhatsApp(order, showFeedback = true) {
 }
 
 function markWhatsAppBillSent(order) {
-  if (order.whatsappSentAt) return;
+  if (order.status === "Cancelled" || order.whatsappSentAt) return;
   order.whatsappSentAt = new Date().toISOString();
   if (!persist(STORAGE_KEYS.orders, orders)) {
     delete order.whatsappSentAt;
@@ -967,6 +1231,32 @@ function markWhatsAppBillSent(order) {
   }
   renderHistory();
   showToast(`Bill ${order.id} marked as sent on WhatsApp.`);
+}
+
+function cancelBill(orderId) {
+  const order = orders.find((entry) => entry.id === orderId);
+  if (!order || order.status === "Cancelled") return;
+  if (!window.confirm(`Cancel bill ${order.id}? It will remain in history but be excluded from sales and customer totals.`)) return;
+
+  const previousStatus = order.status;
+  const previousCancelledAt = order.cancelledAt;
+  order.status = "Cancelled";
+  order.cancelledAt = new Date().toISOString();
+  if (!persist(STORAGE_KEYS.orders, orders)) {
+    order.status = previousStatus;
+    if (previousCancelledAt === undefined) delete order.cancelledAt;
+    else order.cancelledAt = previousCancelledAt;
+    return;
+  }
+
+  if (lastCompletedOrder && lastCompletedOrder.id === orderId) lastCompletedOrder = null;
+  renderHistory();
+  renderKitchenOrders();
+  renderTodaySales();
+  renderCustomers();
+  renderReports();
+  renderCart();
+  showToast(`Bill ${order.id} cancelled. The record remains in history.`);
 }
 
 function renderHistory() {
@@ -981,11 +1271,15 @@ function renderHistory() {
   orders.forEach((order) => {
     const row = document.createElement("div");
     row.className = "history-entry";
+    const isCancelled = order.status === "Cancelled";
     const details = document.createElement("div");
     const heading = document.createElement("strong");
     heading.textContent = `${order.id}${order.customer ? ` · ${order.customer}` : ""}`;
     const date = document.createElement("small");
-    date.textContent = `${new Date(order.createdAt).toLocaleString("en-IN")} · ${order.items.reduce((sum, item) => sum + item.quantity, 0)} items · ${order.paymentMethod}`;
+    const cancelledAt = order.cancelledAt
+      ? ` · cancelled ${new Date(order.cancelledAt).toLocaleString("en-IN")}`
+      : "";
+    date.textContent = `${new Date(order.createdAt).toLocaleString("en-IN")} · ${order.items.reduce((sum, item) => sum + item.quantity, 0)} items · ${order.paymentMethod}${isCancelled ? cancelledAt || " · CANCELLED" : ""}`;
     details.append(heading, date);
     const right = document.createElement("div");
     right.className = "history-entry-right";
@@ -995,27 +1289,32 @@ function renderHistory() {
     print.type = "button";
     print.className = "history-print";
     print.textContent = "Print";
-    print.addEventListener("click", () => {
-      createReceipt(order);
-      window.print();
-    });
+    print.disabled = isCancelled;
+    print.addEventListener("click", () => printCustomerBill(order));
     const whatsapp = document.createElement("button");
     whatsapp.type = "button";
     whatsapp.className = "history-whatsapp";
     whatsapp.textContent = "WhatsApp";
     whatsapp.title = "Open WhatsApp with this bill";
     whatsapp.setAttribute("aria-label", `Send bill ${order.id} on WhatsApp`);
+    whatsapp.disabled = isCancelled;
     whatsapp.addEventListener("click", () => sendBillOnWhatsApp(order));
     const sent = document.createElement("button");
     sent.type = "button";
     sent.className = "history-whatsapp-sent";
     sent.textContent = order.whatsappSentAt ? "WhatsApp sent ✓" : "Mark sent";
-    sent.disabled = Boolean(order.whatsappSentAt);
+    sent.disabled = isCancelled || Boolean(order.whatsappSentAt);
     sent.setAttribute("aria-label", order.whatsappSentAt
       ? `Bill ${order.id} sent on WhatsApp`
       : `Mark bill ${order.id} as sent on WhatsApp`);
     sent.addEventListener("click", () => markWhatsAppBillSent(order));
-    right.append(amount, print, whatsapp, sent);
+    const cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.className = "history-cancel";
+    cancel.textContent = isCancelled ? "Cancelled" : "Cancel bill";
+    cancel.disabled = isCancelled;
+    cancel.addEventListener("click", () => cancelBill(order.id));
+    right.append(amount, print, whatsapp, sent, cancel);
     row.append(details, right);
     elements.historyList.append(row);
   });
@@ -1025,6 +1324,12 @@ elements.search.addEventListener("input", renderProducts);
 elements.discount.addEventListener("input", renderCart);
 elements.taxRate.addEventListener("change", renderCart);
 elements.checkout.addEventListener("click", checkout);
+elements.printCustomerBill.addEventListener("click", () => {
+  if (lastCompletedOrder) printCustomerBill(lastCompletedOrder);
+});
+elements.printKot.addEventListener("click", () => {
+  if (lastCompletedOrder) printKitchenTicket(lastCompletedOrder);
+});
 document.getElementById("clear-cart").addEventListener("click", () => {
   if (!cart.size) return;
   if (!window.confirm("Remove all items from this bill?")) return;
@@ -1185,6 +1490,7 @@ elements.settingsForm.addEventListener("submit", (event) => {
   renderCart();
   showToast("Shop settings saved.");
 });
+elements.printerTest.addEventListener("click", printTestReceipt);
 elements.downloadBackup.addEventListener("click", () => {
   try {
     const contents = JSON.stringify(createBackup(), null, 2);
